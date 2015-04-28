@@ -1,148 +1,106 @@
-#include "/home/user/Desktop/Assignment9P/include/HashTable.h"
-#include <fstream>
-#include <sstream>
-#include <cstdlib>
-#include <cstring>
-#include <string>
 #include <iostream>
+#include "TylersList.h"
+#include <string.h>
+#include <vector>
 
 using namespace std;
 
-HashTable::HashTable()
-{
-    for(int i = 0; i < tableSize; i++){
-        hashTable[i] = new Movie;
-        hashTable[i]->title = "empty";
-        hashTable[i]->year = 0;
-        hashTable[i]->next = NULL;
-    }
+HashTable::HashTable(){
+    tableSize = 10;
 }
 
-HashTable::~HashTable()
-{
-    //dtor
+HashTable::~HashTable(){
+	for (int i = 0; i < tableSize; i++){
+		if (hashTable[i] != NULL){
+			delete hashTable[i];
+		}
+	}
 }
 
 
+void HashTable::printItemsForSale(){
+	bool empty = true;
 
-int HashTable::hash(string x){ //x is the string to hash, s is the array size
-    int hash = 0;
-    int index;
-
-    for(int i = 0; i < x.length(); i++){
-        hash = hash + (int)x[i];  //ascii value of ith character in the string
-    }
-
-    index = hash % tableSize;
-
-    return index;
+	for (int i = 0; i < tableSize; i++){
+		if (hashTable[i] != NULL){
+			for (int j = 0; j < hashTable[i]->size(); j++){
+				cout << (*hashTable[index])[i].item << "is being sold for " << (*hashTable[index])[i].price << "dollars in " (*hashTable[index])[i].location << endl;
+				empty = false;
+			}
+		}
+	}
+	if (empty == true)
+		cout << "There are currently no items in your area for sale. " << endl;
+	return;
 }
 
-void HashTable::insertMovie(std::string in_title, std::string in_year){
-    int index = hash(in_title);
-    int intYear = atoi(in_year.c_str());
+void HashTable::sellItem(string name, int price, string location){
+	int index = hashSum(name,tableSize);
+	if (hashTable[index] == NULL){
+		hashTable[index] = new vector<HashItem>;
+		hashTable[index]->push_back(HashItem(name,price,location));
+	}
 
-    if(hashTable[index]->title == "empty"){
-        hashTable[index]->title = in_title;
-        hashTable[index]->year = intYear;
-        //cout<<"d"<<endl;
-    }
-    else{
-        Movie* ptr = hashTable[index];
-        Movie* n = new Movie;
-        n->title = in_title;
-        n->year = int(intYear);
-        n->next = NULL;
-        while(ptr->next != NULL){
-            ptr = ptr->next;
-        }
-        ptr->next = n;
-    }
+	else{
+		for (int i = 0; i < hashTable[index]->size(); i++){
+			if ((*hashTable[index])[i].item == name){
+				cout << "duplicate" << endl;
+				return;
+			}
+		}
+		hashTable[index]->push_back(HashItem(name,price,location));
+	}
+
+	return;
 }
 
-int HashTable::numberOfItems(int index){
-    int count = 0;
+void HashTable::buyItem(string name){
+	int index = hashSum(name,tableSize);
+	bool found = false;
 
-    if(hashTable[index]->title == "empty"){
-        return count;
-    }
-    else{
-        count++;
-        Movie* ptr = hashTable[index];
-        while(ptr->next != NULL){
-            count++;
-            ptr = ptr->next;
-        }
-    }
-    return count;
+	if (hashTable[index] != NULL){
+		for (int i = 0; i < hashTable[index]->size(); i++){
+			if ((*hashTable[index])[i].item == name){
+				hashTable[index]->erase(hashTable[index]->begin() + i);
+				found = true;
+				break;
+			}
+		}
+		if (hashTable[index]->size() == 0){
+			delete hashTable[index];
+			hashTable[index] = NULL;
+		}
+	}
+	if (found == false){
+		cout << "Item not found." << endl;
+	}
+	return;
 }
 
-void HashTable::printInventory(){
-    int number;
-    for(int i = 0; i < tableSize; i++){
-        number = numberOfItems(i);
-        cout << hashTable[i]->title << ":" << hashTable[i]->year << endl;
-        }
-    }
+void HashTable::findItemPrice(string name){
+	int index = hashSum(name,tableSize);
+	bool found = false;
 
-void HashTable::FindMovie(string in_title){
-    bool foundName = false;
-    Movie* movie;
-
-    Movie* ptr2 = hashTable[*index];
-    while(ptr2 != NULL){
-        if(ptr2->title == in_title){
-            foundName = true;
-            movie->title = ptr2->title;
-        }
-        ptr2 = ptr2->next;
-    }
-    if(foundName){
-        cout << hash(movie->title) << ":" << movie->title << ":" << movie->year << endl;
-    }
-    else{
-        cout << "not found" << endl;
-    }
+	if (hashTable[index] != NULL){
+		for (int i = 0; i < hashTable[index]->size(); i++){
+			if ((*hashTable[index])[i].item == name){
+				cout << (*hashTable[index])[i].item << "is being sold for " << (*hashTable[index])[i].price << "dollars in " (*hashTable[index])[i].location << endl;
+				found = true;
+				break;
+			}
+		}
+	}
+	if (found == false){
+		cout << "Item not found." << endl;
+	}
+	return;
 }
 
-void HashTable::deleteMovie(string in_title){
-    int index = hash(in_title);
-
-    Movie* delPtr;
-    Movie* P1;
-    Movie* P2;
-
-    if(hashTable[index]->title == "empty" && hashTable[index]->year == 0){
-        cout << "not found" << endl;
+int HashTable::hashSum(string inputString, int hashLen){
+	int sum = 0;
+    for (int i = 1; i < inputString.length(); i++){
+    	sum = sum + inputString[i];  //ascii value of ith character in the string
     }
-
-    else if(hashTable[index]->title == in_title && hashTable[index]->next == NULL){
-        hashTable[index]->title = "empty";
-        hashTable[index]->year = 0;
-    }
-    else if(hashTable[index]->title == in_title){
-        delPtr = hashTable[index];
-        hashTable[index] = hashTable[index]->next;
-        delete delPtr;
-    }
-    else{
-        P1 = hashTable[index]->next;
-        P2 = hashTable[index];
-
-        while(P1 != NULL && P1->title != in_title){
-            P2 = P1;
-            P1 = P1->next;
-        }
-        if(P1 == NULL){
-            cout << "not found" << endl;
-        }
-        else{
-            delPtr = P1;
-            P1 = P1->next;
-            P2->next = P1;
-
-            delete delPtr;
-        }
-    }
+    sum = sum % hashLen;
+    return sum;
 }
-
