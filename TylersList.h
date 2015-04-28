@@ -1,42 +1,33 @@
-#ifndef HASHTABLE_H
-#define HASHTABLE_H
-#include <fstream>
-#include <sstream>
-#include <cstdlib>
-#include <cstring>
-#include <string>
+#ifndef TYLERSLIST_H
+#define TYLERSLIST_H
 
-struct Movie{
-    std::string title;
-    int year;
-    Movie *next;
+struct ItemStruct{
+    std::string item;
+    std::string location;
+    int price;
+    ItemStruct *next;
 
-    Movie(){};
+    ItemStruct(){};
 
-    Movie(std::string in_title, int in_year)
-    {
-        title = in_title;
-        year = in_year;
+    ItemStruct(std::string in_item, int in_price, std::string in_location){
+        item = in_item;
+        price = in_price;
+        location = in_location;
     }
 
 };
 
-class HashTable
-{
-    private:
-        static const int tableSize = 10;
-        Movie *hashTable[tableSize];
+class HashTable{
     public:
-        HashTable();
+        HashTable(int);
         ~HashTable();
-        int hash(std::string x);
-        int numberOfItems(int index);
-        void insertMovie(std::string, std::string);
-        void FindMovie(std::string in_title);
-        void deleteMovie(std::string in_title);
-        void printInventory();
+        void sellItem(std::string in_item, int, std::string);
+        ItemStruct* findItemPrice(std::string in_item);
+        void buyItem(std::string in_item);
+        void printItemsForSale();
     protected:
-
+    private:
+        ItemStruct *hashTable;
 };
 
-#endif // HASHTABLE_H
+#endif // TYLERSLIST_H
