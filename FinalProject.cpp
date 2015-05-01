@@ -2,26 +2,13 @@
 #include "TylersList.h"
 #include <string.h>
 #include <vector>
+#include <stdlib.h>
 
 using namespace std;
 
-void displayMenu(){
-    cout << "Welcome to Tyler's List! What would you like to do?" << endl;
-    cout << "1. Sell Item" << endl;
-    cout << "2. Buy Item" << endl;
-    cout << "3. Retrieve Item Details" << endl;
-    cout << "4. Print List of Items For Sale" << endl;
-    cout << "5. Include Items Not in Your Area in Sale List" << endl;
-    cout << "6. Quit" << endl;
-    return;
-}
-
-
 int main(){
     int input;
-
     HashTable tylersList;
-
     bool quit = false;
 
     string input1;
@@ -29,7 +16,7 @@ int main(){
     string input3 = "Boulder, CO";
 
     while(quit != true){
-        displayMenu();
+        tylersList.displayMenu();
         cin >> input;
 
         cin.clear();
@@ -41,7 +28,7 @@ int main(){
                 getline(cin,input1);
                 cout << "How much would you like to sell it for? " << endl;
                 getline(cin,input2);
-                tylersList.sellItem(input1,stoi(input2),input3);
+                tylersList.sellItem(input1,atoi(input2.c_str()),input3);
                 break;
             case 2:
                 cout << "What item would you like to purchase? " << endl;
