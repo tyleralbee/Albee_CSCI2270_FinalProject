@@ -1,5 +1,7 @@
 #ifndef TYLERSLIST_H
 #define TYLERSLIST_H
+#include <vector>
+#include <string>
 
 struct ItemStruct{
     std::string item;
@@ -18,16 +20,20 @@ struct ItemStruct{
 };
 
 class HashTable{
-    public:
-        HashTable(int);
-        ~HashTable();
-        void sellItem(std::string in_item, int, std::string);
-        ItemStruct* findItemPrice(std::string in_item);
-        void buyItem(std::string in_item);
-        void printItemsForSale();
-    protected:
     private:
-        ItemStruct *hashTable;
+        int tableSize = 10;
+        std::vector<ItemStruct> * hashTable[10];
+
+    public:
+        HashTable();
+        ~HashTable();
+        void sellItem(std::string, int, std::string);
+        void buyItem(std::string);
+        void printItemsForSale();
+        void findItemPrice(std::string);
+        int hashSum(std::string, int);
+        void displayMenu();
+    protected:
 };
 
 #endif // TYLERSLIST_H
