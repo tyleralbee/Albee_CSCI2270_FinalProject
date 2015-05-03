@@ -15,27 +15,24 @@ struct ItemStruct{
         item = in_item;
         price = in_price;
         location = in_location;
-        next = NULL;
     }
 
 };
 
 class HashTable{
     private:
-        int tableSize;
-        ItemStruct *hashTable;
-        string myLocation;
+        int tableSize = 10;
+        std::vector<ItemStruct> * hashTable[10];
+
     public:
-        HashTable(int);
+        HashTable();
         ~HashTable();
         void sellItem(std::string, int, std::string);
-        void buyItem(std::string);
+        void buyItem(std::string, int offer);
         void printItemsForSale();
         void findItemPrice(std::string);
-        int hashSum(std::string);
+        int hashSum(std::string, int);
         void displayMenu();
-        ItemStruct *findItemNode(std::string);
-        void setLocation(string);
     protected:
 };
 
