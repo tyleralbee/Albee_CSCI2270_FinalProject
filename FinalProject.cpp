@@ -8,7 +8,7 @@ using namespace std;
 
 int main(){
     int input;
-    HashTable tylersList;
+    HashTable tylersList(10);
     bool quit = false;
 
     string input1;
@@ -44,18 +44,20 @@ int main(){
             case 4:
                 tylersList.printItemsForSale();
                 break;
-
             case 5:
+                cout << "Set location: ";
+                getline(cin,input3);
+                tylersList.setLocation(input3);
+            case 6:
                 tylersList.sellItem("Used Gear Bike", 290, "Golden, CO");
                 tylersList.sellItem("Flatscreen TV, 52 Inch", 900, "Lafayette, CO");
                 tylersList.sellItem("Hardwood Dinner Table, 4ft by 7ft", 150, "Golden, CO");
                 tylersList.sellItem("Xbox 360, 2 Controllers", 120, "Denver, CO");
                 tylersList.sellItem("Comfortable Desk Chair", 85, "Golden, CO");
                 tylersList.sellItem("IPhone 5 Unlocked", 99, "Lafayette, CO");
-
                 cout << "Retrieved a list of items being sold outside of your area. " << endl;
-
-            case 6:
+                break;
+            case 7:
                 cout << "Thanks for shopping! " << endl;
                 quit = true;
                 break;
